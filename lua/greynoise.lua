@@ -6,13 +6,15 @@ local iputil = require 'iputil'
 local lru = require "lru"
 local toboolean = require('toboolean')
 
-local cache = lru.new(1000)
-
+-- Environment Variables
+local cache_size = tonumber(os.getenv("GREYNOISE_LUA_CACHE_SIZE"))
 local gn_api_key = os.getenv("GREYNOISE_API_KEY")
 local ip_field = os.getenv("GREYNOISE_IP_FIELD")
 local drop_riot = toboolean(os.getenv("GREYNOISE_DROP_RIOT_IN_FILTER"))
 local drop_quick = toboolean(os.getenv("GREYNOISE_DROP_QUICK_IN_FILTER"))
 log.level = os.getenv("GREYNOISE_LUA_LOG_LEVEL")
+
+local cache = lru.new(cache_size)
 
 local useragent = "GreyNoiseFluentBit/0.0.1"
 local auth = requests.HTTPBasicAuth('none', gn_api_key)

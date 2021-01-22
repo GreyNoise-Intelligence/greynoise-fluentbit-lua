@@ -25,3 +25,5 @@
 1. Finish README.md (explain drops, rewrites, etc.)
 1. Fix licenses
 1. Build demo environment w/ Splunk
+1. Clean up error handling / lua best practices
+1. Fix bad IP causing HTTP 500 that start with 0*.*.*.*?
