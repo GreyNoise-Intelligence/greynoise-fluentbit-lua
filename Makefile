@@ -14,8 +14,12 @@ build:
 shell:
 	docker run -it -v $(PWD):/app $(CONTAINER) /bin/bash
 
+.PHONY: run-tail
+run-tail: clean
+	docker run -e FB_CONF_FILE=example_tail.conf -it -p 2020:2020 -v $(PWD):/app $(CONTAINER) ./run.sh
+
 .PHONY: run
 run: clean
-	docker run -it -p 2020:2020 -v $(PWD):/app $(CONTAINER) ./run.sh
+	docker run -e FB_CONF_FILE=example_dummy.conf -it -p 2020:2020 -v $(PWD):/app $(CONTAINER) ./run.sh
 
 # busted test.lua
