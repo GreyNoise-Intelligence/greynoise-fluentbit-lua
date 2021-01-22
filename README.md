@@ -12,6 +12,9 @@
 1. Copy an `auth.log` file to the base repo directory
 1. Run `make run-tail`
 
+# Monitoring Run Metrics
+1. Run `curl -s http://127.0.0.1:2020/api/v1/metrics | jq`
+
 # Customizing
 1.
 
