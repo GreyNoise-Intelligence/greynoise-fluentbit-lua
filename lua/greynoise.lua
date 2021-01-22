@@ -10,8 +10,8 @@ local cache = lru.new(1000)
 
 local gn_api_key = os.getenv("GREYNOISE_API_KEY")
 local ip_field = os.getenv("GREYNOISE_IP_FIELD")
-local drop_riot = toboolean(os.getenv("GREYNOISE_DROP_RIOT"))
-local drop_quick = toboolean(os.getenv("GREYNOISE_DROP_QUICK"))
+local drop_riot = toboolean(os.getenv("GREYNOISE_DROP_RIOT_IN_FILTER"))
+local drop_quick = toboolean(os.getenv("GREYNOISE_DROP_QUICK_IN_FILTER"))
 log.level = os.getenv("GREYNOISE_LUA_LOG_LEVEL")
 
 local useragent = "GreyNoiseFluentBit/0.0.1"
