@@ -15,6 +15,7 @@
 1. Add busted tests
 1. Add sample JSON log file for testing
 1. Fix Dockerfile for entrypoint/prep for use as a community image
-1. Add docker-compose
-1. Finish README.md
+1. Finish README.md (explain drops, rewrites, etc.)
 1. Fix licenses
+1. Add a few example configs & logs under an `examples/` folder
+1. Build demo environment w/ Splunk
