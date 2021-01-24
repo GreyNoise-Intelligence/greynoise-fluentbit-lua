@@ -22,4 +22,6 @@ run-tail: clean
 run: clean
 	docker run -e FB_CONF_FILE=example_dummy.conf -it -p 2020:2020 -v $(PWD):/app $(CONTAINER) ./run.sh
 
-# busted test.lua
+.PHONY: test
+test:
+	docker run -it -v $(PWD):/app $(CONTAINER) ./test.sh

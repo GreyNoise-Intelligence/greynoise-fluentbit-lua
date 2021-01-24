@@ -27,3 +27,4 @@
 1. Build demo environment w/ Splunk
 1. Clean up error handling / lua best practices
 1. Fix bad IP causing HTTP 500 that start with 0*.*.*.*?
+1. Describe filter (uses regex/named JSON field, validates IP drops line if invalid OR bogon)
