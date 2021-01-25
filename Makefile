@@ -3,13 +3,14 @@
 CONTAINER := gn-fluentbit
 WORKDIR := /app
 
-.PHONY: clean
-clean:
-	@rm -rf examples/output.log
-
-.PHONY: build
+.docker-build
 build:
 	docker build -t $(CONTAINER) .
+	@touch .docker-build
+
+.PHONY: clean
+clean:
+	@rm -rf examples/output.log .docker-build
 
 .PHONY: shell
 shell:
@@ -24,5 +25,5 @@ run: clean
 	docker run -e FB_CONF_FILE=examples/dummy.conf -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER)
 
 .PHONY: test
-test:
+test: build
 	docker run -it -v $(PWD):$(WORKDIR) $(CONTAINER) --test
