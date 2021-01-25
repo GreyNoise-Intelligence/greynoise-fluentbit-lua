@@ -18,7 +18,7 @@ This is a prototype filter plugin for [FluentBit](https://fluentbit.io/).
 1. Run `make run-tail`
 
 ## Monitoring Run Metrics
-1. Run `curl -s http://127.0.0.1:2020/api/v1/metrics | jq`
+1. Run `curl -s http://127.0.0.1:2020/api/v1/metrics | jq` while fluentbit is running.
 
 # Customization
 
