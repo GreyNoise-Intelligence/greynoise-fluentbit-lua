@@ -28,4 +28,4 @@ run: clean .docker-build
 
 .PHONY: test
 test: .docker-build
-	docker run -it -v $(PWD):$(WORKDIR) $(CONTAINER) --test
+	docker run -v $(PWD):$(WORKDIR) $(CONTAINER) --test
