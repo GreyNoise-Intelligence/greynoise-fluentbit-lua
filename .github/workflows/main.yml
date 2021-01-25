@@ -9,16 +9,11 @@ env:
   GREYNOISE_DROP_BOGON_IN_FILTER: true
   GREYNOISE_DROP_INVALID_IN_FILTER: true
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@master
       - name: Docker Build
         run: make build
-  test:
-    runs-on: ubuntu-20.04
-    needs: build
-    steps:
-      - uses: actions/checkout@master
       - name: Run Tests
         run: make test
