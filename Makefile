@@ -1,6 +1,7 @@
 -include env
 
 CONTAINER := gn-fluentbit
+WORKDIR := /app
 
 .PHONY: clean
 clean:
@@ -12,16 +13,16 @@ build:
 
 .PHONY: shell
 shell:
-	docker run -it -v $(PWD):/app $(CONTAINER) /bin/bash
+	docker run -it -v $(PWD):$(WORKDIR) $(CONTAINER) /bin/bash
 
 .PHONY: run-tail
 run-tail: clean
-	docker run -e FB_CONF_FILE=example_tail.conf -it -p 2020:2020 -v $(PWD):/app $(CONTAINER) ./run.sh
+	docker run -e FB_CONF_FILE=examples/tail.conf -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) ./scripts/run.sh
 
 .PHONY: run
 run: clean
-	docker run -e FB_CONF_FILE=example_dummy.conf -it -p 2020:2020 -v $(PWD):/app $(CONTAINER) ./run.sh
+	docker run -e FB_CONF_FILE=examples/dummy.conf -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) ./scripts/run.sh
 
 .PHONY: test
 test:
-	docker run -it -v $(PWD):/app $(CONTAINER) ./test.sh
+	docker run -it -v $(PWD):$(WORKDIR) $(CONTAINER) ./scripts/run.sh --test

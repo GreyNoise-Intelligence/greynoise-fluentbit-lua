@@ -1,6 +1,6 @@
 --- Provides FluentBit filter for the GreyNoise API.
 -- @module greynoise
-package.path = package.path .. ";/app/lua/?.lua"
+package.path = package.path .. ";./lua/?.lua"
 local requests = require('requests')
 local json = require ("cjson")
 local log = require 'log'
