@@ -1,5 +1,5 @@
 # GreyNoise FluentBit Lua Prototype
-This is a prototype filter plugin for [FluentBit](https://fluentbit.io/).
+This is a prototype filter plugin for [FluentBit](https://fluentbit.io/) which uses the GreyNoise API to drop or de-prioritize records in order
 
 # Getting Started
 
