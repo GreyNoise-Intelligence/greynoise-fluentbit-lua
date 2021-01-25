@@ -28,4 +28,4 @@ run: clean .docker-build
 
 .PHONY: test
 test: .docker-build
-	docker run -v $(PWD):$(WORKDIR) $(CONTAINER) --test
+	docker run --env-file <(env | grep GREYNOISE_) -v $(PWD):$(WORKDIR) $(CONTAINER) --test
