@@ -1,4 +1,4 @@
-name: GreyNoise FluentBit Lua Build
+name: Build
 on: [push, pull_request]
 jobs:
   build-and-test:

@@ -1,4 +1,4 @@
-![main](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/workflows/GreyNoise%20FluentBit%20Lua%20Build/badge.svg)
+![main](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/workflows/Build/badge.svg)
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
