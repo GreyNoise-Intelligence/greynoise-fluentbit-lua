@@ -1,15 +1,15 @@
 name: GreyNoise FluentBit Lua Build
 on: [push, pull_request]
-env:
-  GREYNOISE_IP_FIELD: host
-  GREYNOISE_LUA_LOG_LEVEL: info
-  GREYNOISE_LUA_CACHE_SIZE: 10000
-  GREYNOISE_DROP_RIOT_IN_FILTER: false
-  GREYNOISE_DROP_QUICK_IN_FILTER: false
-  GREYNOISE_DROP_BOGON_IN_FILTER: true
-  GREYNOISE_DROP_INVALID_IN_FILTER: true
 jobs:
   build-and-test:
+    env:
+      GREYNOISE_IP_FIELD: host
+      GREYNOISE_LUA_LOG_LEVEL: info
+      GREYNOISE_LUA_CACHE_SIZE: 10000
+      GREYNOISE_DROP_RIOT_IN_FILTER: false
+      GREYNOISE_DROP_QUICK_IN_FILTER: false
+      GREYNOISE_DROP_BOGON_IN_FILTER: true
+      GREYNOISE_DROP_INVALID_IN_FILTER: true
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@master
