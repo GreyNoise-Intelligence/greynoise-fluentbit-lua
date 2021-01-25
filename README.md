@@ -1,3 +1,8 @@
+![main](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/workflows/.github/workflows/main.yml/badge.svg)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 # GreyNoise FluentBit Lua Prototype
 This is a prototype filter plugin for [FluentBit](https://fluentbit.io/) which uses the GreyNoise API to drop or de-prioritize records in order
 
