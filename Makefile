@@ -5,7 +5,7 @@ WORKDIR := /app
 
 .PHONY: clean
 clean:
-	@rm -rf output.log
+	@rm -rf examples/output.log
 
 .PHONY: build
 build:

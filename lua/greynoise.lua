@@ -33,8 +33,9 @@ function Set (list)
 --
 -- @table record
 -- @string ip
--- @return boolean, table
+-- @return table
 function check_ip(record, ip)
+    local new_record = record
     local restricted_ranges = Set { "unspecified", "broadcast", "multicast", "linklocal", "loopback",
                                     "private", "reserved", "uniqueLocal", "ipv4Mapped", "rfc6145",
                                     "rfc6052", "6to4", "teredo" }
@@ -43,35 +44,36 @@ function check_ip(record, ip)
     if (not valid) then
         -- skip because ip is not valid
         log.warn('not a valid IP', ip)
-        record["gn_invalid"] = true
-        record["gn_bogon"] = false
-        return false, record
+        new_record["gn_invalid"] = true
+        new_record["gn_bogon"] = false
+        return new_record
     end
 
     local ip = iputil.parse(ip)
     if ip then
-        new_record = record
         if ip:kind() ~= 'ipv4' then
             log.warn('not a supported IP kind', ip)
-            record["gn_invalid"] = true
-            record["gn_bogon"] = false
-            return false, record
+            new_record["gn_invalid"] = true
+            new_record["gn_bogon"] = false
+            return new_record
         end
         if restricted_ranges[ip:range()] then
             -- skip because ip is not public
             log.warn('not a public IP', ip)
-            record["gn_bogon"] = true
-            record["gn_invalid"] = false
-            return false, record
+            new_record["gn_bogon"] = true
+            new_record["gn_invalid"] = false
+            return new_record
         end
-        return true, record
+        new_record["gn_invalid"] = false
+        new_record["gn_bogon"] = false
+        return new_record
     else
         -- skip because we we're unable to parse even though this
         -- was valid per iputil
         log.warn('unable to parse as IPv4 for', ip)
-        record["gn_bogon"] = false
-        record["gn_invalid"] = true
-        return false, record
+        new_record["gn_bogon"] = false
+        new_record["gn_invalid"] = true
+        return new_record
     end
 end
 
@@ -173,23 +175,21 @@ function gn_filter(tag, timestamp, record)
             new_record["gn_quick"] = cache_record["q"]
             new_record["gn_invalid"] = cache_record["i"]
             new_record["gn_bogon"] = cache_record["b"]
-            if check_if_drop(drop_riot, drop_quick, new_record) then
+            if check_if_drop(drop_riot, drop_quick, drop_bogon, drop_invalid, new_record) then
                 return -1, 0, 0
             else
                 return 1, timestamp, new_record
             end
         else
-            valid, new_record = check_ip(new_record, ip)
-            if valid then
-                log.debug(string.format("lookup: %s", ip))
-                new_record["gn_riot"] = gn_riot_check(ip)
-                new_record["gn_quick"] = gn_quick_check(ip)
-                cache:set(ip, { r =  new_record["gn_riot"], q =  new_record["gn_quick"], i =  new_record["gn_invalid"], b =  new_record["gn_bogon"] })
-                if check_if_drop(drop_riot, drop_quick, drop_bogon, drop_invalid, new_record) then
-                    return -1, 0, 0
-                else
-                    return 1, timestamp, new_record
-                end
+            local validated_record = check_ip(new_record, ip)
+            log.debug(string.format("lookup: %s", ip))
+            validated_record["gn_riot"] = gn_riot_check(ip)
+            validated_record["gn_quick"] = gn_quick_check(ip)
+            cache:set(ip, { r =  validated_record["gn_riot"], q =  validated_record["gn_quick"], i =  validated_record["gn_invalid"], b =  validated_record["gn_bogon"] })
+            if check_if_drop(drop_riot, drop_quick, drop_bogon, drop_invalid, validated_record) then
+                return -1, 0, 0
+            else
+                return 1, timestamp, validated_record
             end
         end
     else
