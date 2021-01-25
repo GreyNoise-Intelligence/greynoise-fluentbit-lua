@@ -1,7 +1,6 @@
 name: GreyNoise FluentBit Lua Build
 on: [push, pull_request]
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GREYNOISE_IP_FIELD: host
   GREYNOISE_LUA_LOG_LEVEL: info
   GREYNOISE_LUA_CACHE_SIZE: 10000
