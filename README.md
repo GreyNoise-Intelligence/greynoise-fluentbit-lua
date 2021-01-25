@@ -2,7 +2,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
-# GreyNoise FluentBit Lua Prototype
+# GreyNoise FluentBit Lua Filter
 This is a prototype filter plugin for [FluentBit](https://fluentbit.io/) which uses the GreyNoise API to drop or de-prioritize records in order
 
 # Getting Started
