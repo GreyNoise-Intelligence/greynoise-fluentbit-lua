@@ -15,8 +15,10 @@ RUN luarocks install busted && \
     luarocks install lua-requests && \
     luarocks install lua-lru && \
     luarocks install luabitop && \
-    luarocks install lua-cjson && \
-    luarocks install luafilesystem  && \
-    luarocks install toboolean
+    luarocks install lua-cjson
 
 WORKDIR /app
+
+ENTRYPOINT ["scripts/entry.sh"]
+
+CMD [ "--run" ]

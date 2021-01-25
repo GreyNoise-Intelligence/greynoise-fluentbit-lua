@@ -13,16 +13,16 @@ build:
 
 .PHONY: shell
 shell:
-	docker run -it -v $(PWD):$(WORKDIR) $(CONTAINER) /bin/bash
+	docker run -it -v $(PWD):$(WORKDIR) $(CONTAINER) --shell
 
 .PHONY: run-tail
 run-tail: clean
-	docker run -e FB_CONF_FILE=examples/tail.conf -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) ./scripts/run.sh
+	docker run -e FB_CONF_FILE=examples/tail.conf -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER)
 
 .PHONY: run
 run: clean
-	docker run -e FB_CONF_FILE=examples/dummy.conf -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) ./scripts/run.sh
+	docker run -e FB_CONF_FILE=examples/dummy.conf -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER)
 
 .PHONY: test
 test:
-	docker run -it -v $(PWD):$(WORKDIR) $(CONTAINER) ./scripts/run.sh --test
+	docker run -it -v $(PWD):$(WORKDIR) $(CONTAINER) --test

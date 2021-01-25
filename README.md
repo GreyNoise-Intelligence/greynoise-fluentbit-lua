@@ -19,9 +19,6 @@
 # Monitoring Run Metrics
 1. Run `curl -s http://127.0.0.1:2020/api/v1/metrics | jq`
 
-# Customizing
-1.
-
 # TODO
 1. Add sample JSON log file for testing
 1. Fix Dockerfile for entrypoint/prep for use as a community image
