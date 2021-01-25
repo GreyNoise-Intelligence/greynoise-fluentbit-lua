@@ -16,19 +16,19 @@ clean:
 
 .PHONY: shell
 shell: .docker-build
-	docker run -it -v $(PWD):$(WORKDIR) $(CONTAINER) --shell
+	docker run -it --entrypoint /bin/bash -v $(PWD):$(WORKDIR) $(CONTAINER)
 
 .PHONY: run-tail
 run-tail: clean .docker-build
-	docker run -e FB_CONF_FILE=examples/tail.conf -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER)
+	docker run --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c examples/tail.conf
 
 .PHONY: run
 run: clean .docker-build
-	docker run -e FB_CONF_FILE=examples/dummy.conf -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER)
+	docker run --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c examples/dummy.conf
 
 .PHONY: test
-test: .docker-build
-	docker run --env-file .env_example -v $(PWD):$(WORKDIR) $(CONTAINER) --test
+test: clean .docker-build
+	docker run --env-file .env_example --entrypoint /usr/local/bin/busted -v $(PWD):$(WORKDIR) $(CONTAINER) -C ./lua test.lua
 
 .PHONY: stats
 stats:

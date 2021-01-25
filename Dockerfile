@@ -19,6 +19,4 @@ RUN luarocks install busted && \
 
 WORKDIR /app
 
-ENTRYPOINT ["scripts/entry.sh"]
-
-CMD [ "--run" ]
+ENTRYPOINT ["/opt/td-agent-bit/bin/td-agent-bit"]

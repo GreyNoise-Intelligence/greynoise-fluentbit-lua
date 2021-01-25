@@ -1,4 +1,16 @@
 #! /bin/bash
+if ! command -v jq &> /dev/null
+then
+    echo "`jq` could not be found, please install `jq`"
+    exit 1;
+fi
+
+LOG=examples/output.log
+if ! [ -f "$LOG" ]; then
+    echo "$LOG does not exist."
+    exit 1;
+fi
+
 total=$(cat examples/output.log | wc -l)
 quick=$(jq -c '. | select(.gn_quick == true)' examples/output.log | wc -l)
 riot=$(jq -c '. | select(.gn_riot == true)' examples/output.log | wc -l)
