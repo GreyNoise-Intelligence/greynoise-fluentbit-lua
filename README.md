@@ -23,7 +23,7 @@ This is a prototype filter plugin for [FluentBit](https://fluentbit.io/).
 # Customization
 
 ## Direct Filter Drops
-This fiter uses environment variables to configure the ability to drop records directly in the filter. If you do not wish to drop records in the filter you can use the FluentBit [Rewrite Tag](https://docs.fluentbit.io/manual/pipeline/filters/rewrite-tag) filter to construct rules which trigger based on the appended metadata.
+This fiter uses environment variables to configure the ability to drop records directly in the filter. If you do not wish to drop records in the filter you can use the FluentBit [Rewrite Tag](https://docs.fluentbit.io/manual/pipeline/filters/rewrite-tag) filter to construct rules which re-tag records based on the appended metadata so they can be dropped or routed appropriately.
 
 * **riot** - Drop records directly in the filter that return true for the  `/v2/riot` endpoint. `GREYNOISE_DROP_RIOT_IN_FILTER=true`
 * **quick** - Drop records directly in the filter that return true for `/v2/noise/quick` endpoint. `GREYNOISE_DROP_QUICK_IN_FILTER=true`
