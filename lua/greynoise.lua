@@ -1,5 +1,11 @@
---- Provides FluentBit filter for the GreyNoise API.
+--
+-- Provides FluentBit filter for the GreyNoise API.
+--
+-- @author    Obsecurus (matt@greynoise.io)
+-- @license   MIT
+-- @copyright GreyNoise Intelligence Inc. 2021
 -- @module greynoise
+
 package.path = package.path .. ";./lua/?.lua"
 local requests = require('requests')
 local json = require ("cjson")

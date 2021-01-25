@@ -51,7 +51,7 @@ describe("check_ip handler", function()
     end)
   end)
 
-describe("check_if_drop handler", function()
+describe("check_if_drop handler truth table checks", function()
     it("tests check_if_drop handler with t/t/t/t/t/t", function()
         local record = {}
         record['gn_riot'] = true
@@ -61,7 +61,7 @@ describe("check_if_drop handler", function()
         local r = greynoise.check_if_drop("true", "true", "true", "true", record)
         assert.True(r)
     end)
-    it("tests check_if_drop handler with f/f/t/t", function()
+    it("tests check_if_drop handler with f/f/t/t/t/t", function()
         local record = {}
         record['gn_riot'] = true
         record['gn_quick'] = true
@@ -70,7 +70,7 @@ describe("check_if_drop handler", function()
         local r = greynoise.check_if_drop("false", "false", "true", "true", record)
         assert.False(r)
     end)
-    it("tests check_if_drop handler with t/f/t/t", function()
+    it("tests check_if_drop handler with t/f/t/t/t/t", function()
         local record = {}
         record['gn_riot'] = true
         record['gn_quick'] = true
@@ -79,7 +79,7 @@ describe("check_if_drop handler", function()
         local r = greynoise.check_if_drop("true", "false", "true", "true", record)
         assert.True(r)
     end)
-    it("tests check_if_drop handler with f/t/t/t", function()
+    it("tests check_if_drop handler with f/t/t/t/t/t", function()
         local record = {}
         record['gn_riot'] = true
         record['gn_quick'] = true
@@ -88,7 +88,7 @@ describe("check_if_drop handler", function()
         local r = greynoise.check_if_drop("false", "true", "true", "true", record)
         assert.True(r)
     end)
-    it("tests check_if_drop handler with t/t/f/f", function()
+    it("tests check_if_drop handler with t/t/t/t/f/f", function()
         local record = {}
         record['gn_riot'] = false
         record['gn_quick'] = false
@@ -97,7 +97,7 @@ describe("check_if_drop handler", function()
         local r = greynoise.check_if_drop("true", "true", "true", "true", record)
         assert.False(r)
     end)
-    it("tests check_if_drop handler with f/f/f/f", function()
+    it("tests check_if_drop handler with f/f/t/t/f/f", function()
         local record = {}
         record['gn_riot'] = false
         record['gn_quick'] = false
