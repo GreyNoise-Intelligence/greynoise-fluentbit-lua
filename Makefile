@@ -29,3 +29,7 @@ run: clean .docker-build
 .PHONY: test
 test: .docker-build
 	docker run --env-file .env_example -v $(PWD):$(WORKDIR) $(CONTAINER) --test
+
+.PHONY: stats
+stats:
+	./scripts/stats.sh
