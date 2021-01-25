@@ -3,6 +3,20 @@ This is a prototype filter plugin for [FluentBit](https://fluentbit.io/) which u
 
 # Getting Started
 
+These instructions will cover usage information and for the docker container
+
+### Prerequisities
+
+In order to run this container you'll need docker installed.
+
+* [Windows](https://docs.docker.com/windows/started)
+* [OS X](https://docs.docker.com/mac/started/)
+* [Linux](https://docs.docker.com/linux/started/)
+
+In order to run `make stats` you will need `jq` installed
+
+* [JQ](https://stedolan.github.io/jq/download/)
+
 ## GreyNoise Sign-Up
 1. [Sign-Up for GreyNoise](https://viz.greynoise.io/signup/)
 1. Copy `.env_example` to `.env`
@@ -52,22 +66,6 @@ This fiter uses environment variables to configure the ability to drop records d
 
 ## Monitoring Run Metrics
 1. Run `curl -s http://127.0.0.1:2020/api/v1/metrics | jq` while fluentbit is running.
-
-## Getting Started
-
-These instructions will cover usage information and for the docker container
-
-### Prerequisities
-
-In order to run this container you'll need docker installed.
-
-* [Windows](https://docs.docker.com/windows/started)
-* [OS X](https://docs.docker.com/mac/started/)
-* [Linux](https://docs.docker.com/linux/started/)
-
-In order to run `make stats` you will need `jq` installed
-
-* [JQ](https://stedolan.github.io/jq/download/)
 
 ## Contributing
 
