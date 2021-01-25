@@ -31,6 +31,5 @@ This fiter uses environment variables to configure the ability to drop records d
 * **invalid** - Drop records directly in the filter that do not contain a valid IPv4 address. `GREYNOISE_DROP_INVALID_IN_FILTER=true`
 
 # TODO
-1. Fix licenses
-1. Build demo environment w/ Splunk
 1. Fix bad IP causing HTTP 500 that start with 0*.*.*.*?
+1. Add Github action -> DockerHub
