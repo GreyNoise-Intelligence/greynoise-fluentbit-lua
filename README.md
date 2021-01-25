@@ -14,7 +14,7 @@ This is a prototype filter plugin for [FluentBit](https://fluentbit.io/).
 1. Run `make run`
 
 ## Run w/ Linux Auth Logs
-1. Copy a Linux `auth.log` file to the base repo directory
+1. Copy a Linux `auth.log` file to the `examples` directory
 1. Run `make run-tail`
 
 ## Monitoring Run Metrics
