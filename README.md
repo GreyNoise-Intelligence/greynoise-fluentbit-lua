@@ -4,7 +4,7 @@ This is a prototype filter plugin for [FluentBit](https://fluentbit.io/) which u
 # Getting Started
 
 ## GreyNoise Sign-Up
-1. Sign-Up for GreyNoise `https://viz.greynoise.io/signup/`
+1. [Sign-Up for GreyNoise](https://viz.greynoise.io/signup/)
 
 ## Run w/ Dummy Data
 1. Copy `.env_example` to `.env`
