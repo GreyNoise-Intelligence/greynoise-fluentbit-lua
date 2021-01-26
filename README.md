@@ -93,5 +93,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Eduardo Silva (https://github.com/edsiper) - guidance on FluentBit Lua optimizations
-* leite (https://github.com/leite) - `lua/iputil.lua` module
-* rxi (https://github.com/rxi) - `lua/log.lua` module
+* leite (https://github.com/leite) - `greynoise/src/iputil.lua` module
+* rxi (https://github.com/rxi) - `greynoise/src/log.lua` module
