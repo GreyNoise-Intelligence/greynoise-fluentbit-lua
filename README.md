@@ -41,8 +41,6 @@ docker run --env-file .env -it -p 2020:2020 -v $(PWD):/app greynoise/greynoise-f
 
 #### Environment Variables (required)
 
-The following environment variable are required for this container to function.
-
 * `GREYNOISE_API_KEY` - GreyNoise API key to use for HTTP requests.
 * `GREYNOISE_IP_FIELD` - Named field from the Fluent Bit parser to use for IP lookups.
 * `GREYNOISE_LUA_LOG_LEVEL` - Lua logging level (info/error/warning/debug)
