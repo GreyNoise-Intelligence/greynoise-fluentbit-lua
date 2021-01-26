@@ -29,11 +29,41 @@ local headers = {
     ['Accept'] = 'application/json'
 }
 
+local function has_value (tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
+
 function Set (list)
     local set = {}
     for _, l in ipairs(list) do set[l] = true end
     return set
   end
+
+
+-- Convert record bools to strings for FluentBit rewrite_tag regex
+--
+-- @table record
+-- @return table
+function convert_record_bools(record)
+    gn_keys = {"gn_quick", "gn_riot", "gn_bogon", "gn_invalid"}
+    for k,v in pairs(record) do
+        if has_value(gn_keys, k) then
+            if (v == true) then
+                record[k] = "true"
+            end
+            if (v == false) then
+                record[k] = "false"
+            end
+        end
+      end
+    return record
+end
 
 -- Check if a given ip string is a valid non-bogon IPv4 address
 --
@@ -114,28 +144,6 @@ function gn_riot_check(ip)
     return nil
 end
 
--- Check if ENV is configured to drop and evaulute record for drops
---
--- @string drop_riot
--- @string drop_quick
--- @table record
--- @return boolean
-function check_if_drop(drop_riot, drop_quick, drop_bogon, drop_invalid, record)
-    if (drop_riot == 'true') and record.gn_riot then
-        return true
-    end
-    if (drop_quick == 'true') and record.gn_quick then
-        return true
-    end
-    if (drop_bogon == 'true') and record.gn_bogon then
-        return true
-    end
-    if (drop_invalid == 'true') and record.gn_invalid then
-        return true
-    end
-    return false
-end
-
 -- Lookup a source_ip against `/v2/noise/quick/` endpoint
 --
 -- @string ip
@@ -170,10 +178,6 @@ end
 -- @table  record
 -- @return number, number, table
 function gn_filter(tag, timestamp, record)
-    local drop_riot = os.getenv('GREYNOISE_DROP_RIOT_IN_FILTER')
-    local drop_quick = os.getenv('GREYNOISE_DROP_QUICK_IN_FILTER')
-    local drop_invalid = os.getenv('GREYNOISE_DROP_INVALID_IN_FILTER')
-    local drop_bogon = os.getenv('GREYNOISE_DROP_BOGON_IN_FILTER')
     local ip = record[ip_field]
     local new_record = record
     new_record.gn_riot = nil
@@ -188,11 +192,8 @@ function gn_filter(tag, timestamp, record)
             new_record.gn_quick = cache_record['q']
             new_record.gn_invalid = cache_record['i']
             new_record.gn_bogon = cache_record['b']
-            if check_if_drop(drop_riot, drop_quick, drop_bogon, drop_invalid, new_record) then
-                return -1, 0, 0
-            else
-                return 1, timestamp, new_record
-            end
+            final_record = convert_record_bools(new_record)
+            return 1, timestamp, final_record
         else
             local validated_record = check_ip(new_record, ip)
             log.debug(string.format('lookup: %s', ip))
@@ -202,18 +203,15 @@ function gn_filter(tag, timestamp, record)
                 validated_record.gn_quick = gn_quick_check(ip)
                 cache:set(ip, { r =  validated_record.gn_riot, q =  validated_record.gn_quick, i =  validated_record.gn_invalid, b =  validated_record.gn_bogon })
             end
-            if check_if_drop(drop_riot, drop_quick, drop_bogon, drop_invalid, validated_record) then
-                return -1, 0, 0
-            else
-                return 1, timestamp, validated_record
-            end
+            final_record = convert_record_bools(validated_record)
+            return 1, timestamp, final_record
         end
     end
-    return -1, timestamp, new_record
+    final_record = convert_record_bools(new_record)
+    return -1, timestamp, final_record
 end
 
 greynoise.check_ip = check_ip
 greynoise.gn_filter = gn_filter
-greynoise.check_if_drop = check_if_drop
 
 return greynoise

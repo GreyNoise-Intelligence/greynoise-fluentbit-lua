@@ -12,7 +12,7 @@ build:
 
 .PHONY: clean
 clean:
-	@rm -rf output/*.log .docker-build
+	@rm -rf .docker-build output/*
 
 .PHONY: shell
 shell: .docker-build

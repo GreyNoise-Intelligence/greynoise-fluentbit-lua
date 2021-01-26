@@ -41,16 +41,12 @@ docker run --env-file .env -it -p 2020:2020 -v $(PWD):/app greynoise/greynoise-f
 
 #### Environment Variables (required)
 
-This fiter uses environment variables to configure the ability to drop records directly in the filter. If you do not wish to drop records in the filter you can use the Fluent Bit [Rewrite Tag](https://docs.fluentbit.io/manual/pipeline/filters/rewrite-tag) filter to construct rules which re-tag records based on the appended metadata so they can be dropped or routed appropriately.
+The following environment variable are required for this container to function.
 
 * `GREYNOISE_API_KEY` - GreyNoise API key to use for HTTP requests.
 * `GREYNOISE_IP_FIELD` - Named field from the Fluent Bit parser to use for IP lookups.
 * `GREYNOISE_LUA_LOG_LEVEL` - Lua logging level (info/error/warning/debug)
 * `GREYNOISE_LUA_CACHE_SIZE` - The number of IP records to cache in-memory before overwriting.
-* `GREYNOISE_DROP_RIOT_IN_FILTER` - Drop records directly in the filter that return true for the `/v2/riot` endpoint.
-* `GREYNOISE_DROP_QUICK_IN_FILTER` - Drop records directly in the filter that return true for `/v2/noise/quick` endpoint.
-* `GREYNOISE_DROP_BOGON_IN_FILTER` - Drop records directly in the filter that are for bogon address space.
-* `GREYNOISE_DROP_INVALID_IN_FILTER` - Drop records directly in the filter that do not contain a valid IPv4 address.
 
 #### Volumes
 
@@ -58,19 +54,29 @@ This fiter uses environment variables to configure the ability to drop records d
 
 # Sample Data Testing
 
-## Run Example 1 Dummy Data
+## Example 1 - Dummy Data
+`conf/dummy.conf`
+This example just generates the same JSON line over and over.
 1. Copy `.env_example` to `.env`
 1. Copy your GreyNoise API key from the `Account` section in the top right corner
 1. Replace the `<REPLACE_ME>` in `.env` with your API key
 1. Run `make build`
 1. Run `make run`
 
-## Run Example 2 Linux Auth.log
+## Example 2 - Auth.log
+`conf/tail.conf`
+This example watches reads a log file in and watches for new lines.
 1. Copy a Linux `auth.log` file to the `examples` directory
 1. Run `make run-tail`
+1. Run `make stats` in another terminal to see metrics
 
-## Monitoring Run Metrics
-1. Run `curl -s http://127.0.0.1:2020/api/v1/metrics | jq` while Fluent Bit is running.
+## Example 3 - Auth.log With RewriteTag Rules
+`conf/rewrite.conf`
+This is the same as #2 except this leverages [rewrite_tag](https://docs.fluentbit.io/manual/pipeline/filters/rewrite-tag) filter to drop records.
+This config drops invalid IPv4 records, bogon address space, GreyNoise RIOT records, and GreyNoise Quick Lookups.
+1. Copy a Linux `auth.log` file to the `examples` directory
+1. Run `make run-rewrite`
+1. Run `make stats` in another terminal to see metrics (note the drop rates)
 
 ## Contributing
 

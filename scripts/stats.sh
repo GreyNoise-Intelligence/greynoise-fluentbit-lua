@@ -5,7 +5,13 @@ then
     exit 1;
 fi
 
-process_log () {
+if ! command -v curl &> /dev/null
+then
+    echo "`curl` could not be found, please install `curl`"
+    exit 1;
+fi
+
+process_raw_log () {
     log=$1
     echo "## Stats for: $log"
     total=$(cat $log | wc -l)
@@ -32,6 +38,12 @@ process_log () {
     printf "\n"
 }
 
-for log in output/*; do
-    process_log $log
-done
+get_fb_stats () {
+    curl -s http://127.0.0.1:2020/api/v1/metrics | jq '.input'
+}
+
+
+get_fb_stats
+# for log in output/*; do
+#     process_log $log
+# done
