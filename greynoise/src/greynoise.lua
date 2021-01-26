@@ -6,7 +6,7 @@
 -- @copyright GreyNoise Intelligence Inc. 2021
 -- @module greynoise
 
-package.path = package.path .. ";./lua/?.lua"
+package.path = package.path .. ";./greynoise/src/?.lua"
 local requests = require('requests')
 local json = require ("cjson")
 local log = require 'log'

@@ -28,7 +28,7 @@ run: clean .docker-build
 
 .PHONY: test
 test: clean .docker-build
-	docker run --env-file .env_example --entrypoint /usr/local/bin/busted -v $(PWD):$(WORKDIR) $(CONTAINER) -C ./lua test.lua
+	docker run --env-file .env_example --entrypoint /usr/local/bin/busted -v $(PWD):$(WORKDIR) $(CONTAINER) -C ./greynoise spec/test.lua
 
 .PHONY: stats
 stats:
