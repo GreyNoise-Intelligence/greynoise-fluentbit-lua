@@ -2,8 +2,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
-# GreyNoise FluentBit Lua Filter
-This is a prototype filter plugin for [FluentBit](https://fluentbit.io/) which uses the GreyNoise API to drop or de-prioritize records in order
+# GreyNoise Fluent Bit Lua Filter
+This is a prototype [Fluent Bit](https://fluentbit.io/) [filter plugin](https://docs.fluentbit.io/manual/concepts/data-pipeline/filter) that uses the GreyNoise API to drop or re-route records. This specific filter leverages the [Fluent Bit Lua filter](https://docs.fluentbit.io/manual/pipeline/filters/lua).
+
 
 # Getting Started
 
@@ -27,7 +28,7 @@ In order to run `make stats` you will need `jq` installed
 1. Copy your GreyNoise API key from the `Account` section in the top right corner
 1. Replace the `<REPLACE_ME>` in `.env` with your API key
 1. Create a directory for your configs `mkdir conf`
-1. Add your FluentBit configs and parsers to `conf/`
+1. Add your Fluent Bit configs and parsers to `conf/`
 
 ## Docker
 ### Usage
@@ -40,10 +41,10 @@ docker run --env-file .env -it -p 2020:2020 -v $(PWD):/app greynoise/greynoise-f
 
 #### Environment Variables (required)
 
-This fiter uses environment variables to configure the ability to drop records directly in the filter. If you do not wish to drop records in the filter you can use the FluentBit [Rewrite Tag](https://docs.fluentbit.io/manual/pipeline/filters/rewrite-tag) filter to construct rules which re-tag records based on the appended metadata so they can be dropped or routed appropriately.
+This fiter uses environment variables to configure the ability to drop records directly in the filter. If you do not wish to drop records in the filter you can use the Fluent Bit [Rewrite Tag](https://docs.fluentbit.io/manual/pipeline/filters/rewrite-tag) filter to construct rules which re-tag records based on the appended metadata so they can be dropped or routed appropriately.
 
 * `GREYNOISE_API_KEY` - GreyNoise API key to use for HTTP requests.
-* `GREYNOISE_IP_FIELD` - Named field from the FluentBit parser to use for IP lookups.
+* `GREYNOISE_IP_FIELD` - Named field from the Fluent Bit parser to use for IP lookups.
 * `GREYNOISE_LUA_LOG_LEVEL` - Lua logging level (info/error/warning/debug)
 * `GREYNOISE_LUA_CACHE_SIZE` - The number of IP records to cache in-memory before overwriting.
 * `GREYNOISE_DROP_RIOT_IN_FILTER` - Drop records directly in the filter that return true for the `/v2/riot` endpoint.
@@ -69,7 +70,7 @@ This fiter uses environment variables to configure the ability to drop records d
 1. Run `make run-tail`
 
 ## Monitoring Run Metrics
-1. Run `curl -s http://127.0.0.1:2020/api/v1/metrics | jq` while fluentbit is running.
+1. Run `curl -s http://127.0.0.1:2020/api/v1/metrics | jq` while Fluent Bit is running.
 
 ## Contributing
 
@@ -92,6 +93,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Eduardo Silva (https://github.com/edsiper) - guidance on FluentBit Lua optimizations
+* Eduardo Silva (https://github.com/edsiper) - guidance on Fluent Bit Lua optimizations
 * leite (https://github.com/leite) - `greynoise/src/iputil.lua` module
 * rxi (https://github.com/rxi) - `greynoise/src/log.lua` module
