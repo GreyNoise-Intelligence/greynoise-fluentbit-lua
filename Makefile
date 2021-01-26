@@ -12,7 +12,7 @@ build:
 
 .PHONY: clean
 clean:
-	@rm -rf examples/output.log .docker-build
+	@rm -rf output/*.log .docker-build
 
 .PHONY: shell
 shell: .docker-build
@@ -20,11 +20,11 @@ shell: .docker-build
 
 .PHONY: run-tail
 run-tail: clean .docker-build
-	docker run --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c examples/tail.conf
+	docker run --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c conf/tail.conf
 
 .PHONY: run
 run: clean .docker-build
-	docker run --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c examples/dummy.conf
+	docker run --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c conf/dummy.conf
 
 .PHONY: test
 test: clean .docker-build

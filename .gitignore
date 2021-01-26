@@ -1,4 +1,6 @@
 .env
 *.log
 *.db
+output/*
+!output/.keep
 .docker-build
