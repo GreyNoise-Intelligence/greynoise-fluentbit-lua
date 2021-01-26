@@ -88,7 +88,7 @@ end
 -- @string ip
 -- @return boolean
 function gn_riot_check(ip)
-    headers = {['key'] = gn_api_key, ['User-Agent'] = useragent}
+    local headers = {['key'] = gn_api_key, ['User-Agent'] = useragent}
     local url = string.format('https://api.greynoise.io/v2/riot/%s', ip)
     local response = requests.get{url, headers = headers, auth = auth}
     if (not response) then
@@ -96,7 +96,7 @@ function gn_riot_check(ip)
         return false
     end
     if response.status_code == 200  then
-        body, error = response.json()
+        local body, error = response.json()
         if error ~= nil then
             log.warn('%v', error)
         end
@@ -146,7 +146,7 @@ function gn_quick_check(ip)
         return false
     end
     if response.status_code == 200 then
-        body, error = response.json()
+        local body, error = response.json()
         if error ~= nil then
             log.warn('%v', error)
         end
@@ -167,14 +167,14 @@ end
 -- @table  record
 -- @return number, number, table
 function gn_filter(tag, timestamp, record)
-    drop_riot = os.getenv('GREYNOISE_DROP_RIOT_IN_FILTER')
-    drop_quick = os.getenv('GREYNOISE_DROP_QUICK_IN_FILTER')
-    drop_invalid = os.getenv('GREYNOISE_DROP_INVALID_IN_FILTER')
-    drop_bogon = os.getenv('GREYNOISE_DROP_BOGON_IN_FILTER')
-    ip = record[ip_field]
+    local drop_riot = os.getenv('GREYNOISE_DROP_RIOT_IN_FILTER')
+    local drop_quick = os.getenv('GREYNOISE_DROP_QUICK_IN_FILTER')
+    local drop_invalid = os.getenv('GREYNOISE_DROP_INVALID_IN_FILTER')
+    local drop_bogon = os.getenv('GREYNOISE_DROP_BOGON_IN_FILTER')
+    local ip = record[ip_field]
     local new_record = record
     if ip then
-        cache_record = cache:get(ip)
+        local cache_record = cache:get(ip)
         if cache_record then
             log.debug(string.format('cache hit: %s', ip))
             new_record.gn_riot = cache_record['r']
