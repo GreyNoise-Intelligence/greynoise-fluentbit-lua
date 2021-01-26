@@ -42,6 +42,8 @@ function Set (list)
 -- @return table
 function check_ip(record, ip)
     local new_record = record
+    new_record.gn_bogon = false
+    new_record.gn_invalid = true
     local restricted_ranges = Set { 'unspecified', 'broadcast', 'multicast', 'linklocal', 'loopback',
                                     'private', 'reserved', 'uniqueLocal', 'ipv4Mapped', 'rfc6145',
                                     'rfc6052', '6to4', 'teredo' }
@@ -73,14 +75,11 @@ function check_ip(record, ip)
         new_record.gn_invalid = false
         new_record.gn_bogon = false
         return new_record
-    else
-        -- skip because we we're unable to parse even though this
-        -- was valid per iputil
-        log.warn('unable to parse as IPv4 for', ip)
-        new_record.gn_bogon = false
-        new_record.gn_invalid = true
-        return new_record
     end
+    -- skip because we we're unable to parse even though this
+    -- was valid per iputil
+    log.warn('unable to parse as IPv4 for', ip)
+    return new_record
 end
 
 -- Lookup a source_ip against `/v2/riot/` endpoint
@@ -88,9 +87,9 @@ end
 -- @string ip
 -- @return boolean
 function gn_riot_check(ip)
-    local headers = {['key'] = gn_api_key, ['User-Agent'] = useragent}
+    local headers = { ['key'] = gn_api_key, ['User-Agent'] = useragent }
     local url = string.format('https://api.greynoise.io/v2/riot/%s', ip)
-    local response = requests.get{url, headers = headers, auth = auth}
+    local response = requests.get{ url, headers = headers, auth = auth }
     if (not response) then
         log.warn('no response from /v2/riot/ endpoint')
         return false
@@ -105,10 +104,9 @@ function gn_riot_check(ip)
         end
     elseif response.status_code == 404  then
         return false
-    else
-        log.warn(string.format('Received %d status code from %s', response.status_code, url))
-        return false
     end
+
+    log.warn(string.format('Received %d status code from %s', response.status_code, url))
     return false
 end
 
@@ -140,7 +138,7 @@ end
 -- @return boolean
 function gn_quick_check(ip)
     local url = string.format('https://api.greynoise.io/v2/noise/quick/%s', ip)
-    local response = requests.get{url, headers = headers, auth = auth}
+    local response = requests.get{ url, headers = headers, auth = auth }
     if (not response) then
         log.warn('no response from /v2/noise/quick/ endpoint')
         return false
@@ -153,10 +151,9 @@ function gn_quick_check(ip)
         if body.noise == true then
             return true
         end
-    else
-        log.warn(string.format('Received %d status code from %s', response.status_code, url))
-        return false
     end
+
+    log.warn(string.format('Received %d status code from %s', response.status_code, url))
     return false
 end
 
@@ -198,8 +195,6 @@ function gn_filter(tag, timestamp, record)
                 return 1, timestamp, validated_record
             end
         end
-    else
-        return -1, timestamp, new_record
     end
     return -1, timestamp, new_record
 end
