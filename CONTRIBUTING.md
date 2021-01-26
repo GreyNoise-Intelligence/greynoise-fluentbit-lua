@@ -26,7 +26,7 @@ Pull requests
 
 Whether small or large PRs are welcomed. PRs
 
-All new/modified Lua code should have tests in the `lua/test.lua` file.
+All new/modified Lua code should have tests in the `greynoise/spec/` folder.
 
 We currently test using Github Actions by calling `make test` which uses the Lua [Busted](https://olivinelabs.com/busted/) test harness. This can be modified here:
 

@@ -92,22 +92,26 @@ function gn_riot_check(ip)
     local response = requests.get{ url, headers = headers, auth = auth }
     if (not response) then
         log.warn('no response from /v2/riot/ endpoint')
-        return false
+        return nil
     end
     if response.status_code == 200  then
         local body, error = response.json()
         if error ~= nil then
             log.warn('%v', error)
+            return nil
         end
         if body.riot == true then
             return true
         end
+        return false
     elseif response.status_code == 404  then
+        -- RIOT uses a soft 404 to represent that resource is not in RIOT.
+        -- This interface differs from the `v2/noise/quick` endpoint that returns 200 for all requested IPs.
         return false
     end
 
     log.warn(string.format('Received %d status code from %s', response.status_code, url))
-    return false
+    return nil
 end
 
 -- Check if ENV is configured to drop and evaulute record for drops
@@ -141,20 +145,22 @@ function gn_quick_check(ip)
     local response = requests.get{ url, headers = headers, auth = auth }
     if (not response) then
         log.warn('no response from /v2/noise/quick/ endpoint')
-        return false
+        return nil
     end
     if response.status_code == 200 then
         local body, error = response.json()
         if error ~= nil then
             log.warn('%v', error)
+            return nil
         end
         if body.noise == true then
             return true
         end
+        return false
     end
 
     log.warn(string.format('Received %d status code from %s', response.status_code, url))
-    return false
+    return nil
 end
 
 -- Main filter handler
@@ -170,6 +176,10 @@ function gn_filter(tag, timestamp, record)
     local drop_bogon = os.getenv('GREYNOISE_DROP_BOGON_IN_FILTER')
     local ip = record[ip_field]
     local new_record = record
+    new_record.gn_riot = nil
+    new_record.gn_quick = nil
+    new_record.gn_invalid = nil
+    new_record.gn_bogon = nil
     if ip then
         local cache_record = cache:get(ip)
         if cache_record then
@@ -186,9 +196,12 @@ function gn_filter(tag, timestamp, record)
         else
             local validated_record = check_ip(new_record, ip)
             log.debug(string.format('lookup: %s', ip))
-            validated_record.gn_riot = gn_riot_check(ip)
-            validated_record.gn_quick = gn_quick_check(ip)
-            cache:set(ip, { r =  validated_record.gn_riot, q =  validated_record.gn_quick, i =  validated_record.gn_invalid, b =  validated_record.gn_bogon })
+            if (not validated_record.gn_invalid and not validated_record.gn_bogon) then
+                -- Make GN API calls for valid non-bogon IPv4 records
+                validated_record.gn_riot = gn_riot_check(ip)
+                validated_record.gn_quick = gn_quick_check(ip)
+                cache:set(ip, { r =  validated_record.gn_riot, q =  validated_record.gn_quick, i =  validated_record.gn_invalid, b =  validated_record.gn_bogon })
+            end
             if check_if_drop(drop_riot, drop_quick, drop_bogon, drop_invalid, validated_record) then
                 return -1, 0, 0
             else
