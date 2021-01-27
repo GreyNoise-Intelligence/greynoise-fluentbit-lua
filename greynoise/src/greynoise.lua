@@ -70,53 +70,53 @@ end
 -- @table record
 -- @string ip
 -- @return table
-function check_ip(record, ip)
-    local new_record = record
-    new_record.gn_bogon = false
-    new_record.gn_invalid = true
-    local restricted_ranges = Set { 'unspecified', 'broadcast', 'multicast', 'linklocal', 'loopback',
-                                    'private', 'reserved', 'uniqueLocal', 'ipv4Mapped', 'rfc6145',
-                                    'rfc6052', '6to4', 'teredo' }
-    -- parse ip into metatable
-    local valid = iputil.valid(ip)
-    if (not valid) then
-        -- skip because ip is not valid
-        log.warn('not a valid IP', ip)
-        new_record.gn_invalid = true
+local function check_ip(record, ip)
+        local new_record = record
         new_record.gn_bogon = false
-        return new_record
-    end
-
-    local ip = iputil.parse(ip)
-    if ip then
-        if ip:kind() ~= 'ipv4' then
-            log.warn('not a supported IP kind', ip)
+        new_record.gn_invalid = true
+        local restricted_ranges = Set { 'unspecified', 'broadcast', 'multicast', 'linklocal', 'loopback',
+                                        'private', 'reserved', 'uniqueLocal', 'ipv4Mapped', 'rfc6145',
+                                        'rfc6052', '6to4', 'teredo' }
+        -- parse ip into metatable
+        local valid = iputil.valid(ip)
+        if (not valid) then
+            -- skip because ip is not valid
+            log.warn('not a valid IP', ip)
             new_record.gn_invalid = true
             new_record.gn_bogon = false
             return new_record
         end
-        if restricted_ranges[ip:range()] then
-            -- skip because ip is not public
-            log.warn('not a public IP', ip)
-            new_record.gn_bogon = true
+
+        local ip = iputil.parse(ip)
+        if ip then
+            if ip:kind() ~= 'ipv4' then
+                log.warn('not a supported IP kind', ip)
+                new_record.gn_invalid = true
+                new_record.gn_bogon = false
+                return new_record
+            end
+            if restricted_ranges[ip:range()] then
+                -- skip because ip is not public
+                log.warn('not a public IP', ip)
+                new_record.gn_bogon = true
+                new_record.gn_invalid = false
+                return new_record
+            end
             new_record.gn_invalid = false
+            new_record.gn_bogon = false
             return new_record
         end
-        new_record.gn_invalid = false
-        new_record.gn_bogon = false
+        -- skip because we we're unable to parse even though this
+        -- was valid per iputil
+        log.warn('unable to parse as IPv4 for', ip)
         return new_record
     end
-    -- skip because we we're unable to parse even though this
-    -- was valid per iputil
-    log.warn('unable to parse as IPv4 for', ip)
-    return new_record
-end
 
 -- Lookup a source_ip against `/v2/riot/` endpoint
 --
 -- @string ip
 -- @return boolean
-function gn_riot_check(ip)
+local function gn_riot_check(ip)
     local headers = { ['key'] = gn_api_key, ['User-Agent'] = useragent }
     local url = string.format('https://api.greynoise.io/v2/riot/%s', ip)
     local response = requests.get{ url, headers = headers, auth = auth }
@@ -148,7 +148,7 @@ end
 --
 -- @string ip
 -- @return boolean
-function gn_quick_check(ip)
+local function gn_quick_check(ip)
     local url = string.format('https://api.greynoise.io/v2/noise/quick/%s', ip)
     local response = requests.get{ url, headers = headers, auth = auth }
     if (not response) then
@@ -178,37 +178,37 @@ end
 -- @table  record
 -- @return number, number, table
 function gn_filter(tag, timestamp, record)
-    local ip = record[ip_field]
-    local new_record = record
-    new_record.gn_riot = nil
-    new_record.gn_quick = nil
-    new_record.gn_invalid = nil
-    new_record.gn_bogon = nil
-    if ip then
-        local cache_record = cache:get(ip)
-        if cache_record then
-            log.debug(string.format('cache hit: %s', ip))
-            new_record.gn_riot = cache_record['r']
-            new_record.gn_quick = cache_record['q']
-            new_record.gn_invalid = cache_record['i']
-            new_record.gn_bogon = cache_record['b']
-            final_record = convert_record_bools(new_record)
-            return 1, timestamp, final_record
-        else
-            local validated_record = check_ip(new_record, ip)
-            log.debug(string.format('lookup: %s', ip))
-            if (not validated_record.gn_invalid and not validated_record.gn_bogon) then
-                -- Make GN API calls for valid non-bogon IPv4 records
-                validated_record.gn_riot = gn_riot_check(ip)
-                validated_record.gn_quick = gn_quick_check(ip)
-                cache:set(ip, { r =  validated_record.gn_riot, q =  validated_record.gn_quick, i =  validated_record.gn_invalid, b =  validated_record.gn_bogon })
-            end
-            final_record = convert_record_bools(validated_record)
-            return 1, timestamp, final_record
-        end
-    end
-    final_record = convert_record_bools(new_record)
-    return -1, timestamp, final_record
+  local ip = record[ip_field]
+  local new_record = record
+  new_record.gn_riot = nil
+  new_record.gn_quick = nil
+  new_record.gn_invalid = nil
+  new_record.gn_bogon = nil
+  if ip then
+      local cache_record = cache:get(ip)
+      if cache_record then
+          log.debug(string.format('cache hit: %s', ip))
+          new_record.gn_riot = cache_record['r']
+          new_record.gn_quick = cache_record['q']
+          new_record.gn_invalid = cache_record['i']
+          new_record.gn_bogon = cache_record['b']
+          final_record = convert_record_bools(new_record)
+          return 1, timestamp, final_record
+      else
+          local validated_record = check_ip(new_record, ip)
+          log.debug(string.format('lookup: %s', ip))
+          if (not validated_record.gn_invalid and not validated_record.gn_bogon) then
+              -- Make GN API calls for valid non-bogon IPv4 records
+              validated_record.gn_riot = gn_riot_check(ip)
+              validated_record.gn_quick = gn_quick_check(ip)
+              cache:set(ip, { r =  validated_record.gn_riot, q =  validated_record.gn_quick, i =  validated_record.gn_invalid, b =  validated_record.gn_bogon })
+          end
+          final_record = convert_record_bools(validated_record)
+          return 1, timestamp, final_record
+      end
+  end
+  final_record = convert_record_bools(new_record)
+  return -1, timestamp, final_record
 end
 
 greynoise.check_ip = check_ip
