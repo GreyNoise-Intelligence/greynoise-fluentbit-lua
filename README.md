@@ -53,7 +53,7 @@ docker run --env-file .env -it -p 2020:2020 -v $(PWD):/app greynoise/greynoise-f
 # Sample Data Testing
 
 ## Example 1 - Dummy Data
-`conf/dummy.conf`
+[`conf/dummy.conf`](conf/dummy.conf)
 
 This example just generates the same JSON line over and over.
 1. Copy `.env_example` to `.env`
@@ -63,7 +63,7 @@ This example just generates the same JSON line over and over.
 1. Run `make run`
 
 ## Example 2 - Auth.log
-`conf/tail.conf`
+[`conf/tail.conf`](conf/tail.conf)
 
 This example watches reads a log file in and watches for new lines.
 1. Copy a Linux `auth.log` file to the `examples` directory
@@ -71,7 +71,7 @@ This example watches reads a log file in and watches for new lines.
 1. Run `make stats` in another terminal to see metrics
 
 ## Example 3 - Auth.log With RewriteTag Rules
-`conf/rewrite.conf`
+[`conf/rewrite.conf`](conf/rewrite.conf)
 
 This is the same as #2 except this leverages [rewrite_tag](https://docs.fluentbit.io/manual/pipeline/filters/rewrite-tag) filter to drop records.
 This config drops invalid IPv4 records, bogon address space, GreyNoise RIOT records, and GreyNoise Quick Lookups.
