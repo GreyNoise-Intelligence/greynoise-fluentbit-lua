@@ -100,3 +100,13 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Eduardo Silva (https://github.com/edsiper) - guidance on Fluent Bit Lua optimizations
 * leite (https://github.com/leite) - `greynoise/src/iputil.lua` module
 * rxi (https://github.com/rxi) - `greynoise/src/log.lua` module
+
+## Links
+
+* [GreyNoise.io](https://greynoise.io)
+* [GreyNoise Terms](https://greynoise.io/terms)
+* [GreyNoise Developer Portal](https://developer.greynoise.io)
+
+## Contact Us
+
+Have any questions or comments about GreyNoise?  Contact us at [hello@greynoise.io](mailto:hello@greynoise.io)
