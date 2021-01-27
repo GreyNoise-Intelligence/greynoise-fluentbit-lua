@@ -158,7 +158,7 @@ end
 
 -- Main filter handler
 --
--- @string tag
+-- @string _
 -- @number timestamp
 -- @table  record
 -- @return number, number, table
