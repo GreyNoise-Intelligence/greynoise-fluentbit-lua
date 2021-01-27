@@ -34,6 +34,14 @@ run: clean .docker-build
 test: clean .docker-build
 	docker run --env-file .env_example --entrypoint /usr/local/bin/busted -v $(PWD):$(WORKDIR) $(CONTAINER) -C ./greynoise spec/test.lua
 
+.PHONY: lint
+lint:
+	luacheck -d greynoise/**/*.lua
+
+.PHONY: format
+format:
+	lua-format -i -c .lua-format greynoise/**/*.lua
+
 .PHONY: stats
 stats:
 	./scripts/stats.sh
