@@ -12,7 +12,7 @@ build:
 
 .PHONY: push
 push: .docker-build
-	docker login
+	docker login -u $(USERNAME_PASSWORD) -p $(DOCKERHUB_PASSWORD)
 	docker tag $(CONTAINER) greynoise/greynoise-fluentbit-lua:$(TAG)
 	docker push greynoise/greynoise-fluentbit-lua:$(TAG)
 
