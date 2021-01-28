@@ -52,7 +52,7 @@ docker run --env-file .env -it -p 2020:2020 -v $(PWD):/app greynoise/greynoise-f
 The sample data tests are meant to be run from the repo base folder.
 
 ## Example 1 - Dummy Data
-[`conf/dummy.conf`](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/conf/dummy.conf)
+[`conf/dummy.conf`](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/tree/main/conf/dummy.conf)
 
 This example just generates the same JSON line over and over.
 1. Copy `.env_example` to `.env`
@@ -62,7 +62,7 @@ This example just generates the same JSON line over and over.
 1. Run `make run`
 
 ## Example 2 - Auth.log
-[`conf/tail.conf`](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/conf/tail.conf)
+[`conf/tail.conf`](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/tree/main/conf/tail.conf)
 
 This example watches reads a log file in and watches for new lines.
 1. Copy a Linux `auth.log` file to the `examples` directory
@@ -70,7 +70,7 @@ This example watches reads a log file in and watches for new lines.
 1. Run `make stats` in another terminal to see metrics
 
 ## Example 3 - Auth.log With RewriteTag Rules
-[`conf/rewrite.conf`](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/conf/rewrite.conf)
+[`conf/rewrite.conf`](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/tree/main/conf/rewrite.conf)
 
 This is the same as #2 except this leverages [rewrite_tag](https://docs.fluentbit.io/manual/pipeline/filters/rewrite-tag) filter to drop records.
 This config drops invalid IPv4 records, bogon address space, GreyNoise RIOT records, and GreyNoise Quick records.
@@ -97,7 +97,7 @@ docker run --env-file .env -it -p 2020:2020 -v $(PWD):/app greynoise/greynoise-f
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/tree/main/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
@@ -112,7 +112,7 @@ See also the list of [contributors](https://github.com/GreyNoise-Intelligence/gr
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/tree/main/LICENSE.md) file for details.
 
 ## Acknowledgments
 
