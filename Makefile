@@ -10,6 +10,12 @@ WORKDIR := /app
 build:
 	docker build -t $(CONTAINER) .
 
+.PHONY: push
+push: .docker-build
+	docker login
+	docker tag $(CONTAINER) greynoise/greynoise-fluentbit-lua:$(TAG)
+	docker push greynoise/greynoise-fluentbit-lua:$(TAG)
+
 .PHONY: clean
 clean:
 	@rm -rf .docker-build output/*
