@@ -27,8 +27,6 @@ In order to run `make stats` you will need `jq` installed
 1. Copy `.env_example` to `.env`
 1. Copy your GreyNoise API key from the `Account` section in the top right corner
 1. Replace the `<REPLACE_ME>` in `.env` with your API key
-1. Create a directory for your configs `mkdir conf`
-1. Add your Fluent Bit configs and parsers to `conf/`
 
 ## Docker
 ### Usage
@@ -51,6 +49,7 @@ docker run --env-file .env -it -p 2020:2020 -v $(PWD):/app greynoise/greynoise-f
 * `/app` - Core working directory (mounted from the base repo folder)
 
 # Sample Data Testing
+The sample data tests are meant to be run from the repo base folder.
 
 ## Example 1 - Dummy Data
 [`conf/dummy.conf`](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/conf/dummy.conf)
@@ -78,6 +77,23 @@ This config drops invalid IPv4 records, bogon address space, GreyNoise RIOT reco
 1. Copy a Linux `auth.log` file to the `examples` directory
 1. Run `make run-rewrite`
 1. Run `make stats` in another terminal to see metrics (note the drop rates)
+
+# Running in your environment
+1. Create a directory for your configs `mkdir conf`
+1. Add your Fluent Bit configs and parsers to `conf/`
+1. Create a directory for your outputs `mkdir output`
+1. You should now have a directory tree that looks something like the following:
+    ```shell
+    conf/
+        parser.conf
+        myconfig.conf
+    output/
+    .env
+    ```
+1. Run the docker command
+```shell
+docker run --env-file .env -it -p 2020:2020 -v $(PWD):/app greynoise/greynoise-fluentbit-lua:latest -c /app/conf/myconfig.conf
+```
 
 ## Contributing
 
