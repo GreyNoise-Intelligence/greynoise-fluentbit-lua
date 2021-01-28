@@ -5,7 +5,7 @@
 -- @license   MIT
 -- @copyright GreyNoise Intelligence Inc. 2021
 -- @module greynoise
-package.path = package.path .. ';./greynoise/src/?.lua'
+package.path = package.path .. ';/opt/greynoise/src/?.lua'
 local requests = require('requests')
 local log = require 'log'
 local iputil = require 'iputil'

@@ -36,7 +36,7 @@ In order to run `make stats` you will need `jq` installed
 #### Container Parameters
 
 ```shell
-docker run --env-file .env -it -p 2020:2020 -v $(PWD):/app greynoise/greynoise-fluentbit-lua:latest -c conf/myconfig.conf
+docker run --env-file .env -it -p 2020:2020 -v $(PWD):/app greynoise/greynoise-fluentbit-lua:latest -c /app/conf/myconfig.conf
 ```
 
 #### Environment Variables (required)

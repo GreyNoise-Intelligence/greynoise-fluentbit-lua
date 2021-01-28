@@ -17,6 +17,8 @@ RUN luarocks install busted && \
     luarocks install luabitop && \
     luarocks install lua-cjson
 
-WORKDIR /app
+RUN mkdir -p /opt
+ADD ./greynoise /opt/greynoise
+WORKDIR /opt/greynoise
 
 ENTRYPOINT ["/opt/td-agent-bit/bin/td-agent-bit"]
