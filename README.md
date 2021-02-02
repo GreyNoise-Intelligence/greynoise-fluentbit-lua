@@ -65,7 +65,6 @@ This example just generates the same JSON line over and over.
 [`conf/tail.conf`](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/tree/main/conf/tail.conf)
 
 This example watches reads a log file in and watches for new lines.
-1. Copy a Linux `auth.log` file to the `examples` directory
 1. Run `make run-tail`
 1. Run `make stats` in another terminal to see metrics
 
@@ -74,7 +73,6 @@ This example watches reads a log file in and watches for new lines.
 
 This is the same as #2 except this leverages [rewrite_tag](https://docs.fluentbit.io/manual/pipeline/filters/rewrite-tag) filter to drop records.
 This config drops invalid IPv4 records, bogon address space, GreyNoise RIOT records, and GreyNoise Quick records.
-1. Copy a Linux `auth.log` file to the `examples` directory
 1. Run `make run-rewrite`
 1. Run `make stats` in another terminal to see metrics (note the drop rates)
 
