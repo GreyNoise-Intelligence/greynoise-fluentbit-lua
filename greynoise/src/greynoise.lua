@@ -11,7 +11,7 @@ local log = require 'log'
 local iputil = require 'iputil'
 local lru = require 'lru'
 
-local greynoise = {_version = '0.1.0'}
+local greynoise = {_version = '0.1.1'}
 
 local cache_size = tonumber(os.getenv('GREYNOISE_LUA_CACHE_SIZE'))
 local gn_api_key = os.getenv('GREYNOISE_API_KEY')
@@ -20,7 +20,7 @@ log.level = os.getenv('GREYNOISE_LUA_LOG_LEVEL')
 
 local cache = lru.new(cache_size)
 
-local useragent = 'GreyNoiseFluentBit/0.0.1'
+local useragent = string.format('GreyNoiseFluentBit/%s', greynoise._version)
 local auth = requests.HTTPBasicAuth('none', gn_api_key)
 local headers = {['User-Agent'] = useragent, ['Accept'] = 'application/json'}
 
