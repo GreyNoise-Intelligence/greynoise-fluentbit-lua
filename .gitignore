@@ -1,5 +1,6 @@
 .env
 *.log
+!examples/auth.log
 *.db
 output/*
 !output/.keep
