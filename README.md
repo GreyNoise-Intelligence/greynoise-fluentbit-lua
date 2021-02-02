@@ -3,7 +3,7 @@
 
 
 # GreyNoise Fluent Bit Lua Filter
-<img src="https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/tree/main/img/logo.png" width="320">
+<img src="https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/tree/main/img/logo.png?raw=true" width="320">
 This is a prototype [Fluent Bit](https://fluentbit.io/) container using a [filter plugin](https://docs.fluentbit.io/manual/concepts/data-pipeline/filter) which calls the GreyNoise API to drop, re-route, or enrich records. This specific filter leverages the [Fluent Bit Lua script filter](https://docs.fluentbit.io/manual/pipeline/filters/lua).
 
 
