@@ -41,7 +41,7 @@ end
 -- @table record
 -- @return table
 local function convert_record_bools(record)
-  local gn_keys = {"gn_quick", "gn_riot", "gn_bogon", "gn_invalid"}
+  local gn_keys = {"gn_noise", "gn_riot", "gn_bogon", "gn_invalid", "gn_unknown"}
   for k, v in pairs(record) do
     if has_value(gn_keys, k) then
       if (v == true) then record[k] = "true" end
@@ -166,17 +166,19 @@ function gn_filter(_, timestamp, record)
   local ip = record[ip_field]
   local new_record = record
   new_record.gn_riot = nil
-  new_record.gn_quick = nil
+  new_record.gn_noise = nil
   new_record.gn_invalid = nil
   new_record.gn_bogon = nil
+  new_record.gn_unknown = nil
   if ip then
     local cache_record = cache:get(ip)
     if cache_record then
       log.debug(string.format('cache hit: %s', ip))
       new_record.gn_riot = cache_record['r']
-      new_record.gn_quick = cache_record['q']
+      new_record.gn_noise = cache_record['n']
       new_record.gn_invalid = cache_record['i']
       new_record.gn_bogon = cache_record['b']
+      new_record.gn_unknown = cache_record['u']
       local final_record = convert_record_bools(new_record)
       return 1, timestamp, final_record
     else
@@ -185,12 +187,16 @@ function gn_filter(_, timestamp, record)
       if (not validated_record.gn_invalid and not validated_record.gn_bogon) then
         -- Make GN API calls for valid non-bogon IPv4 records
         validated_record.gn_riot = gn_riot_check(ip)
-        validated_record.gn_quick = gn_quick_check(ip)
+        validated_record.gn_noise = gn_quick_check(ip)
+        if (not validated_record.gn_riot and not validated_record.gn_noise) then
+          validated_record.gn_unknown = true
+        end
         cache:set(ip, {
           r = validated_record.gn_riot,
-          q = validated_record.gn_quick,
+          n = validated_record.gn_noise,
           i = validated_record.gn_invalid,
-          b = validated_record.gn_bogon
+          b = validated_record.gn_bogon,
+          u = validated_record.gn_unknown
         })
       end
       local final_record = convert_record_bools(validated_record)

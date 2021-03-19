@@ -26,11 +26,15 @@ shell: .docker-build
 
 .PHONY: run-tail
 run-tail: clean .docker-build
-	docker run --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c /app/conf/tail.conf
+	docker run --env GREYNOISE_IP_FIELD=host --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c /app/conf/tail.conf
 
 .PHONY: run-rewrite
 run-rewrite: clean .docker-build
-	docker run --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c /app/conf/rewrite.conf
+	docker run --env GREYNOISE_IP_FIELD=host --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c /app/conf/rewrite.conf
+
+.PHONY: run-vpc
+run-vpc: clean .docker-build
+	docker run --env GREYNOISE_IP_FIELD=srcaddr --env-file .env -it -p 2020:2020 -v $(PWD):$(WORKDIR) $(CONTAINER) -c /app/conf/vpc.conf
 
 .PHONY: run
 run: clean .docker-build
