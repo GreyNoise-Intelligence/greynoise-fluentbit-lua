@@ -21,7 +21,10 @@ log.level = os.getenv('GREYNOISE_LUA_LOG_LEVEL')
 local cache = lru.new(cache_size)
 
 local useragent = string.format('GreyNoiseFluentBit/%s', greynoise._version)
-local auth = requests.HTTPBasicAuth('none', gn_api_key)
+if gn_api_key ~= nil then
+  local auth = requests.HTTPBasicAuth('none', gn_api_key)
+end
+
 local headers = {['User-Agent'] = useragent, ['Accept'] = 'application/json'}
 
 local function has_value(tab, val)
@@ -41,7 +44,7 @@ end
 -- @table record
 -- @return table
 local function convert_record_bools(record)
-  local gn_keys = {"gn_quick", "gn_riot", "gn_bogon", "gn_invalid"}
+  local gn_keys = {"gn_noise", "gn_riot", "gn_bogon", "gn_invalid"}
   for k, v in pairs(record) do
     if has_value(gn_keys, k) then
       if (v == true) then record[k] = "true" end
@@ -100,60 +103,38 @@ local function check_ip(record, ip)
   return new_record
 end
 
--- Lookup a source_ip against `/v2/riot/` endpoint
+-- Lookup a source_ip against `/v3/community` endpoint
 --
 -- @string ip
--- @return boolean
-local function gn_riot_check(ip)
-  local url = string.format('https://api.greynoise.io/v2/riot/%s', ip)
+-- @return boolean, boolean
+local function gn_community_lookup(ip)
+  local url = string.format('https://api.greynoise.io/v3/community/%s', ip)
   local response = requests.get {url, headers = headers, auth = auth}
   if (not response) then
-    log.warn('no response from /v2/riot/ endpoint')
-    return nil
+    log.warn('no response from /v3/community endpoint')
+    return nil, nil
   end
   if response.status_code == 200 then
     local body, error = response.json()
     if error ~= nil then
       log.warn('%v', error)
-      return nil
+      return nil, nil
     end
-    if body.riot == true then return true end
-    return false
-  elseif response.status_code == 404 then
-    -- RIOT uses a soft 404 to represent that resource is not in RIOT.
-    -- This interface differs from the `v2/noise/quick` endpoint that returns 200 for all requested IPs.
-    return false
+    return body.noise, body.riot
+  end
+  if response.status_code == 404 then
+      local body, error = response.json()
+      if error ~= nil then
+        log.warn('%v', error)
+        return nil, nil
+      end
+      log.debug(string.format('%s, %s',url, body.message))
+      return false, false
   end
 
   log.warn(string.format('Received %d status code from %s',
                          response.status_code, url))
-  return nil
-end
-
--- Lookup a source_ip against `/v2/noise/quick/` endpoint
---
--- @string ip
--- @return boolean
-local function gn_quick_check(ip)
-  local url = string.format('https://api.greynoise.io/v2/noise/quick/%s', ip)
-  local response = requests.get {url, headers = headers, auth = auth}
-  if (not response) then
-    log.warn('no response from /v2/noise/quick/ endpoint')
-    return nil
-  end
-  if response.status_code == 200 then
-    local body, error = response.json()
-    if error ~= nil then
-      log.warn('%v', error)
-      return nil
-    end
-    if body.noise == true then return true end
-    return false
-  end
-
-  log.warn(string.format('Received %d status code from %s',
-                         response.status_code, url))
-  return nil
+  return nil, nil
 end
 
 -- Main filter handler
@@ -166,7 +147,7 @@ function gn_filter(_, timestamp, record)
   local ip = record[ip_field]
   local new_record = record
   new_record.gn_riot = nil
-  new_record.gn_quick = nil
+  new_record.gn_noise = nil
   new_record.gn_invalid = nil
   new_record.gn_bogon = nil
   if ip then
@@ -174,7 +155,7 @@ function gn_filter(_, timestamp, record)
     if cache_record then
       log.debug(string.format('cache hit: %s', ip))
       new_record.gn_riot = cache_record['r']
-      new_record.gn_quick = cache_record['q']
+      new_record.gn_noise = cache_record['q']
       new_record.gn_invalid = cache_record['i']
       new_record.gn_bogon = cache_record['b']
       local final_record = convert_record_bools(new_record)
@@ -184,11 +165,13 @@ function gn_filter(_, timestamp, record)
       log.debug(string.format('lookup: %s', ip))
       if (not validated_record.gn_invalid and not validated_record.gn_bogon) then
         -- Make GN API calls for valid non-bogon IPv4 records
-        validated_record.gn_riot = gn_riot_check(ip)
-        validated_record.gn_quick = gn_quick_check(ip)
+        validated_record.gn_noise, validated_record.gn_riot = gn_community_lookup(ip)
+        if not validated_record.gn_noise == nil or not validated_record.gn_riot == nil then
+          return -1, timestamp, final_record
+        end
         cache:set(ip, {
           r = validated_record.gn_riot,
-          q = validated_record.gn_quick,
+          q = validated_record.gn_noise,
           i = validated_record.gn_invalid,
           b = validated_record.gn_bogon
         })

@@ -74,7 +74,7 @@ This example watches reads a log file in and watches for new lines.
 [`conf/rewrite.conf`](https://github.com/GreyNoise-Intelligence/greynoise-fluentbit-lua/tree/main/conf/rewrite.conf)
 
 This is the same as #2 except this leverages [rewrite_tag](https://docs.fluentbit.io/manual/pipeline/filters/rewrite-tag) filter to drop records.
-This config drops invalid IPv4 records, bogon address space, GreyNoise RIOT records, and GreyNoise Quick records.
+This config drops invalid IPv4 records, bogon address space, GreyNoise RIOT records, and GreyNoise Noise records.
 1. Run `make run-rewrite`
 1. Run `make stats` in another terminal to see metrics (note the drop rates)
 
