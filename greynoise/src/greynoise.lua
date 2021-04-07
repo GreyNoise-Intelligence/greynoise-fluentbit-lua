@@ -21,9 +21,7 @@ log.level = os.getenv('GREYNOISE_LUA_LOG_LEVEL')
 local cache = lru.new(cache_size)
 
 local useragent = string.format('GreyNoiseFluentBit/%s', greynoise._version)
--- if gn_api_key ~= nil then
 local auth = requests.HTTPBasicAuth('none', gn_api_key)
--- end
 
 local headers = {['User-Agent'] = useragent, ['Accept'] = 'application/json'}
 
