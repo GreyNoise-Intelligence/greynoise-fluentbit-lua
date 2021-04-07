@@ -18,9 +18,9 @@ get_fb_stats () {
 res=$(get_fb_stats)
 records=$(echo $res | jq '.rewrite_input.records')
 noise=$(echo $res | jq '.gn_noise.records')
-riot=$(echo $res | jq '.gn_noise.riot')
-bogon=$(echo $res | jq '.gn_noise.bogon')
-invalid=$(echo $res | jq '.gn_noise.invalid')
+riot=$(echo $res | jq '.gn_riot.records')
+bogon=$(echo $res | jq '.gn_bogon.records')
+invalid=$(echo $res | jq '.gn_invalid.records')
 
 total_invalid=$(echo "scale=4; $bogon + $invalid" | bc -l)
 total_noise=$(echo "scale=4; $noise + $riot" | bc -l)
