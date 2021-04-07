@@ -166,7 +166,7 @@ function gn_filter(_, timestamp, record)
         -- Make GN API calls for valid non-bogon IPv4 records
         validated_record.gn_noise, validated_record.gn_riot = gn_community_lookup(ip)
         if not validated_record.gn_noise == nil or not validated_record.gn_riot == nil then
-          return -1, timestamp, final_record
+          return -1, timestamp, record
         end
         cache:set(ip, {
           r = validated_record.gn_riot,
