@@ -21,9 +21,9 @@ log.level = os.getenv('GREYNOISE_LUA_LOG_LEVEL')
 local cache = lru.new(cache_size)
 
 local useragent = string.format('GreyNoiseFluentBit/%s', greynoise._version)
-if gn_api_key ~= nil then
-  local auth = requests.HTTPBasicAuth('none', gn_api_key)
-end
+-- if gn_api_key ~= nil then
+local auth = requests.HTTPBasicAuth('none', gn_api_key)
+-- end
 
 local headers = {['User-Agent'] = useragent, ['Accept'] = 'application/json'}
 
@@ -144,7 +144,8 @@ end
 -- @table  record
 -- @return number, number, table
 function gn_filter(_, timestamp, record)
-  local ip = record[ip_field]
+  -- Extract IPv4 from message
+  local ip = record[ip_field]:match("(%d+%.%d+%.%d+%.%d+)")
   local new_record = record
   new_record.gn_riot = nil
   new_record.gn_noise = nil
