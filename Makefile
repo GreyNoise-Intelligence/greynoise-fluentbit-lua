@@ -1,4 +1,4 @@
--include env
+-include .env
 
 CONTAINER := gn-fluentbit
 WORKDIR := /app
